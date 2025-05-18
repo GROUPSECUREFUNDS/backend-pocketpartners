@@ -1,11 +1,11 @@
 # Etapa de compilación: usa Maven con Java 22
-FROM maven:3.9.5-eclipse-temurin-22 AS build
+FROM maven:3-eclipse-temurin-22-alpine AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
 # Etapa de ejecución: usa Java 22 (misma versión que la de build)
-FROM eclipse-temurin:22-jdk
+FROM openjdk:22-jdk
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
