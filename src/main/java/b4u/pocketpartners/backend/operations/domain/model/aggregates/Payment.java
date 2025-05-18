@@ -60,6 +60,5 @@ public class Payment extends AuditableAbstractAggregateRoot<Payment> {
 
     public String getStatus(){return this.status.name().toLowerCase();}
 
-
 }
 
