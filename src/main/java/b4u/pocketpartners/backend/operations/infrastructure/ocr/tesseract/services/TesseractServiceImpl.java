@@ -1,8 +1,10 @@
 package b4u.pocketpartners.backend.operations.infrastructure.ocr.tesseract.services;
 
 import b4u.pocketpartners.backend.operations.infrastructure.ocr.tesseract.TesseractService;
+import jakarta.annotation.PostConstruct;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
@@ -13,17 +15,20 @@ import java.util.List;
 
 @Service
 public class TesseractServiceImpl implements TesseractService {
-    private Tesseract tesseract;
+    private final Tesseract tesseract;
+    private final List<String> languages = List.of("spa", "eng");
+
+    @Value("${tesseract.datapath}")
     private String dataPath;
-    private List<String> languages;
 
     public TesseractServiceImpl() throws IOException, URISyntaxException {
         tesseract = new Tesseract();
-        languages = List.of("spa","eng");
-        dataPath = new File(getClass().getClassLoader().getResource("tessdata").toURI()).getAbsolutePath();
+    }
 
+    @PostConstruct
+    public void init(){
         tesseract.setDatapath(dataPath);
-        tesseract.setLanguage(String.join("+",languages));
+        tesseract.setLanguage(String.join("+", languages));
         tesseract.setPageSegMode(1);
     }
 
