@@ -1,6 +1,7 @@
 package b4u.pocketpartners.backend.operations.interfaces.rest;
 
 import b4u.pocketpartners.backend.groups.domain.exceptions.PaymentNotFoundException;
+import b4u.pocketpartners.backend.operations.domain.exceptions.ReceiptImageProcessingException;
 import b4u.pocketpartners.backend.operations.domain.exceptions.ReceiptNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,5 +39,13 @@ public class ExceptionsController {
                 errors.put(error.getField(), error.getDefaultMessage())
         );
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ReceiptImageProcessingException.class)
+    public ResponseEntity<Map<String,String>> handle(ReceiptImageProcessingException ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Internal Server Error");
+        error.put("message", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

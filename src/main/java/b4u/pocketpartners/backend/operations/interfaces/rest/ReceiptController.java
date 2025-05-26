@@ -3,6 +3,7 @@ package b4u.pocketpartners.backend.operations.interfaces.rest;
 import b4u.pocketpartners.backend.operations.domain.exceptions.ReceiptNotFoundException;
 import b4u.pocketpartners.backend.operations.domain.model.queries.GetAllReceiptsByPaymentIdQuery;
 import b4u.pocketpartners.backend.operations.domain.model.queries.GetReceiptByIdQuery;
+import b4u.pocketpartners.backend.operations.domain.model.queries.GetReceiptTextByIdQuery;
 import b4u.pocketpartners.backend.operations.domain.services.ReceiptCommandService;
 import b4u.pocketpartners.backend.operations.domain.services.ReceiptQueryService;
 import b4u.pocketpartners.backend.operations.interfaces.rest.resources.CreateReceiptResource;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "Receipts", description = "Receipts management endpoints")
@@ -55,6 +57,14 @@ public class ReceiptController {
         var receiptResouce = ReceiptResourceFromEntityAssembler.toResourceFromEntity(receipt);
 
         return new ResponseEntity(receiptResouce, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/text/{receiptId}")
+    @Operation(summary = "Get text from a receipt by receiptId")
+    public ResponseEntity<String> getTextFromReceiptByid(@PathVariable Long receiptId) throws IOException {
+        var query = new GetReceiptTextByIdQuery(receiptId);
+        String textFromReceipt = receiptQueryService.handle(query);
+        return ResponseEntity.ok(textFromReceipt);
     }
 
 }
