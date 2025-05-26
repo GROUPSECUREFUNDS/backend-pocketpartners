@@ -52,6 +52,9 @@ public class ReceiptQueryServiceImpl implements ReceiptQueryService {
         Receipt receipt = receiptRepository.findById(query.receiptId())
                 .orElseThrow(()-> new ReceiptNotFoundException(query.receiptId()));
 
+        if(receipt.getImagePath()==null)
+            throw  new ReceiptImageProcessingException("No image is associated with this receipt");
+
         //Solo se debe cambiar el url en caso de cambiar el system file
         URL urlReceiptImage = new URL("http://localhost:8080/api/v1/images/"+receipt.getImagePath());
         BufferedImage receiptImage = ImageIO.read(urlReceiptImage);
@@ -63,6 +66,5 @@ public class ReceiptQueryServiceImpl implements ReceiptQueryService {
             throw new ReceiptImageProcessingException("the text cannot be extracted from this receipt");
         }
     }
-
 
 }
