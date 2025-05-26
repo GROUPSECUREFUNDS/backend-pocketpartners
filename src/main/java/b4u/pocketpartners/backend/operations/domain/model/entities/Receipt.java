@@ -4,10 +4,13 @@ import b4u.pocketpartners.backend.operations.domain.model.aggregates.Payment;
 import b4u.pocketpartners.backend.operations.domain.model.valueobjects.Amount;
 import b4u.pocketpartners.backend.shared.domain.model.entities.AuditableModel;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
 public class Receipt extends AuditableModel {
     @Id
@@ -17,11 +20,24 @@ public class Receipt extends AuditableModel {
     @Embedded
     private Amount amount;
     private String name;
-    private LocalDate date;
-    private String imageId;
-    private Boolean isActive;
+    private LocalDate issueDate;
+    private String imagePath;
+    private Boolean isActive = true;
 
     @ManyToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
+
+    public Receipt(){};
+
+    public Receipt(String name,Amount amount, LocalDate issueDate, String imagePath){
+        this.name = name;
+        this.amount = amount;
+        this.issueDate = issueDate;
+        this.imagePath = imagePath;
+    };
+
+    public void assignToPayment(Payment payment){
+        this.payment = payment;
+    }
 }
