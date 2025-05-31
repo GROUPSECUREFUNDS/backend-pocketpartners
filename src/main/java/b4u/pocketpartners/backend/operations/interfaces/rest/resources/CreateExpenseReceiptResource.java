@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record CreateReceiptResource(
+public record CreateExpenseReceiptResource(
         @NotNull
-        Long paymentId,
+        Long expenseId,
         @NotNull
         String name,
         @NotNull
@@ -15,6 +15,5 @@ public record CreateReceiptResource(
         @NotNull
         LocalDate issueDate,
         String imagePath
-
 ) {
 }

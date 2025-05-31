@@ -12,7 +12,8 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-public class Receipt extends AuditableModel {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Receipt extends AuditableModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,10 +25,6 @@ public class Receipt extends AuditableModel {
     private String imagePath;
     private Boolean isActive = true;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-
     public Receipt(){};
 
     public Receipt(String name,Amount amount, LocalDate issueDate, String imagePath){
@@ -37,7 +34,4 @@ public class Receipt extends AuditableModel {
         this.imagePath = imagePath;
     };
 
-    public void assignToPayment(Payment payment){
-        this.payment = payment;
-    }
 }

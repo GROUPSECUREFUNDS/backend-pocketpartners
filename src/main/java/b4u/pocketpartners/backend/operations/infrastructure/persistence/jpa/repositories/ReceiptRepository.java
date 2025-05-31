@@ -10,6 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
-    public List<Receipt> findByPayment(Payment payment);
     public Optional<Receipt> findById(Long receiptId);
 }

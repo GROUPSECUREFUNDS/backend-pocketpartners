@@ -1,5 +1,6 @@
 package b4u.pocketpartners.backend.operations.domain.model.aggregates;
 
+import b4u.pocketpartners.backend.operations.domain.model.entities.PaymentReceipt;
 import b4u.pocketpartners.backend.operations.domain.model.valueobjects.Amount;
 import b4u.pocketpartners.backend.operations.domain.model.valueobjects.Description;
 import b4u.pocketpartners.backend.operations.domain.model.valueobjects.DueDate;
@@ -10,6 +11,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Payment extends AuditableAbstractAggregateRoot<Payment> {
@@ -34,6 +37,10 @@ public class Payment extends AuditableAbstractAggregateRoot<Payment> {
     @JoinColumn(name = "expense_id")
     private Expense expense;
 
+    @Getter
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PaymentReceipt> receipts = new ArrayList<>();
+
     public Payment() {}
 
     public Payment(String description, BigDecimal amount, UserInformation userInformation, Expense expense) {
@@ -57,9 +64,14 @@ public class Payment extends AuditableAbstractAggregateRoot<Payment> {
     public String getDescription() {return description.getDescription();}
 
     public BigDecimal getAmount(){return amount.getAmount();}
+
     public Amount getAmountAsObject(){return this.amount;}
 
     public String getStatus(){return this.status.name().toLowerCase();}
 
+    public void addReceipt(PaymentReceipt receipt) {
+        this.receipts.add(receipt);
+        receipt.assignToPayment(this);
+    }
 }
 
