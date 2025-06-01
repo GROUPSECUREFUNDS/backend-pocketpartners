@@ -21,13 +21,22 @@ public abstract class Receipt extends AuditableModel {
     @Embedded
     private Amount amount;
     private String name;
+    private String receiptNumber;
     private LocalDate issueDate;
     private String imagePath;
     private Boolean isActive = true;
 
     public Receipt(){};
 
-    public Receipt(String name,Amount amount, LocalDate issueDate, String imagePath){
+    public Receipt(String name,Amount amount, LocalDate issueDate, String imagePath, String receiptNumber) {
+        this.name = name;
+        this.amount = amount;
+        this.issueDate = issueDate;
+        this.imagePath = imagePath;
+        this.receiptNumber = receiptNumber;
+    };
+
+    public Receipt(String name,Amount amount, LocalDate issueDate, String imagePath) {
         this.name = name;
         this.amount = amount;
         this.issueDate = issueDate;
