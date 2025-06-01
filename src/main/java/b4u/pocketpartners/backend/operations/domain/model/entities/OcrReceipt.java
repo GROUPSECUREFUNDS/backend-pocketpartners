@@ -20,7 +20,7 @@ public class OcrReceipt extends Receipt{
     @Embedded
     private OcrData ocrData;
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "receipt_id")
     private Receipt originalReceipt;
 
