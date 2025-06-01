@@ -1,6 +1,7 @@
 package b4u.pocketpartners.backend.operations.interfaces.rest;
 
 import b4u.pocketpartners.backend.groups.domain.exceptions.PaymentNotFoundException;
+import b4u.pocketpartners.backend.operations.domain.exceptions.ExpenseNotFoundException;
 import b4u.pocketpartners.backend.operations.domain.exceptions.ReceiptImageProcessingException;
 import b4u.pocketpartners.backend.operations.domain.exceptions.ReceiptNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,15 @@ public class ExceptionsController {
         error.put("message", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ExpenseNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handle(ExpenseNotFoundException ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Not Found");
+        error.put("message", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String,String>> handle(IllegalArgumentException ex){
         Map<String, String> error = new HashMap<>();
