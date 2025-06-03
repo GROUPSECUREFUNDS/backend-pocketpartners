@@ -12,7 +12,8 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-public class Receipt extends AuditableModel {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Receipt extends AuditableModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,24 +21,29 @@ public class Receipt extends AuditableModel {
     @Embedded
     private Amount amount;
     private String name;
+    private String receiptNumber;
     private LocalDate issueDate;
     private String imagePath;
     private Boolean isActive = true;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
+    @OneToOne(mappedBy = "originalReceipt", cascade = CascadeType.ALL, orphanRemoval = true)
+    private OcrReceipt ocrReceipt;
 
     public Receipt(){};
 
-    public Receipt(String name,Amount amount, LocalDate issueDate, String imagePath){
+    public Receipt(String name,Amount amount, LocalDate issueDate, String imagePath, String receiptNumber) {
+        this.name = name;
+        this.amount = amount;
+        this.issueDate = issueDate;
+        this.imagePath = imagePath;
+        this.receiptNumber = receiptNumber;
+    };
+
+    public Receipt(String name,Amount amount, LocalDate issueDate, String imagePath) {
         this.name = name;
         this.amount = amount;
         this.issueDate = issueDate;
         this.imagePath = imagePath;
     };
 
-    public void assignToPayment(Payment payment){
-        this.payment = payment;
-    }
 }

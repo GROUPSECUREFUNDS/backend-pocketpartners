@@ -1,19 +1,19 @@
 package b4u.pocketpartners.backend.operations.domain.model.aggregates;
 
 import b4u.pocketpartners.backend.groups.domain.model.aggregates.Group;
+import b4u.pocketpartners.backend.operations.domain.model.entities.ExpenseReceipt;
 import b4u.pocketpartners.backend.operations.domain.model.valueobjects.Amount;
 import b4u.pocketpartners.backend.operations.domain.model.valueobjects.DueDate;
 import b4u.pocketpartners.backend.operations.domain.model.valueobjects.ExpenseName;
 import b4u.pocketpartners.backend.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import b4u.pocketpartners.backend.users.domain.model.aggregates.UserInformation;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -36,6 +36,9 @@ public class Expense extends AuditableAbstractAggregateRoot<Expense> {
     @Getter
     @Embedded
     private DueDate dueDate;
+
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExpenseReceipt> receipts = new ArrayList<>();
 
     public Expense(String name, BigDecimal amount, UserInformation userInformation, Group group, LocalDate dueDate){
         this.name = new ExpenseName(name);
@@ -63,4 +66,13 @@ public class Expense extends AuditableAbstractAggregateRoot<Expense> {
     public BigDecimal getAmount(){return amount.getAmount();}
 
     public LocalDate getDueDate(){return dueDate.getDueDate();}
+
+    public Amount getAmountAsObject() {
+        return amount;
+    }
+
+    public void addReceipt(ExpenseReceipt receipt) {
+        receipts.add(receipt);
+        receipt.assignToExpense(this);
+    }
 }
