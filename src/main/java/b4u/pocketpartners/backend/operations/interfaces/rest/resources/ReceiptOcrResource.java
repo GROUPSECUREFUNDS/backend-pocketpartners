@@ -7,6 +7,7 @@ import java.util.Map;
 public record ReceiptOcrResource(
         Long id,
         String name,
+        String receiptNumber,
         BigDecimal amount,
         LocalDate issueDate,
         String imagePath,

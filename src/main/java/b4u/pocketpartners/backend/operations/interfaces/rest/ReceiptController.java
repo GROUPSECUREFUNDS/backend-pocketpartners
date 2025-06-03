@@ -1,7 +1,7 @@
 package b4u.pocketpartners.backend.operations.interfaces.rest;
 
 import b4u.pocketpartners.backend.operations.domain.exceptions.ReceiptNotFoundException;
-import b4u.pocketpartners.backend.operations.domain.model.commands.CreateOcrReceiptCommand;
+import b4u.pocketpartners.backend.operations.domain.model.commands.CreateOcrReceiptFromReceiptCommand;
 import b4u.pocketpartners.backend.operations.domain.model.commands.DeleteReceiptCommand;
 import b4u.pocketpartners.backend.operations.domain.model.queries.GetAllReceiptsByExpenseIdQuery;
 import b4u.pocketpartners.backend.operations.domain.model.queries.GetAllReceiptsByPaymentIdQuery;
@@ -41,16 +41,6 @@ public class ReceiptController {
         var receiptResouce = ReceiptResourceFromEntityAssembler.toResourceFromEntity(receipt);
 
         return ResponseEntity.ok(receiptResouce);
-    }
-    @PostMapping("/{receiptId}/ocr")
-    @Operation(summary = "Process OCR for a receipt by id")
-    public ResponseEntity<ReceiptOcrResource> processOcrForReceiptById(@PathVariable Long receiptId) {
-        var command = new CreateOcrReceiptCommand(receiptId);
-        var ocrReceipt = receiptCommandService.handle(command);
-
-        ReceiptOcrResource ocrReceiptResource = ReceiptResourceFromEntityAssembler.toResourceFromEntity(ocrReceipt);
-
-        return new ResponseEntity<>(ocrReceiptResource, HttpStatus.CREATED);
     }
 
     @GetMapping("/payment/{paymentId}")

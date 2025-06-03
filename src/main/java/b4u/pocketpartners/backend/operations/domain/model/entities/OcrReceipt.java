@@ -33,7 +33,7 @@ public class OcrReceipt extends Receipt{
             String imagePath,
             OcrData ocrData
     ) {
-        super(name, amount, issueDate, imagePath);
+        super(name, amount, issueDate, imagePath,receiptNumber);
         this.ocrData = ocrData;
     }
 

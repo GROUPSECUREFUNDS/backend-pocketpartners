@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public record ReceiptResource(
         Long id,
         String name,
+        String receiptNumber,
         BigDecimal amount,
         LocalDate issueDate,
         String imagePath

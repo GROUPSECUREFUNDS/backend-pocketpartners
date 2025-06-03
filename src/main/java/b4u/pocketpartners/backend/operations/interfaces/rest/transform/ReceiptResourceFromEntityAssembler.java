@@ -10,6 +10,7 @@ public class ReceiptResourceFromEntityAssembler {
         return new ReceiptOcrResource(
                 receipt.getId(),
                 receipt.getName(),
+                receipt.getReceiptNumber(),
                 receipt.getAmount().amount(),
                 receipt.getIssueDate(),
                 receipt.getImagePath(),
@@ -21,6 +22,7 @@ public class ReceiptResourceFromEntityAssembler {
         return new ReceiptResource(
                 receipt.getId(),
                 receipt.getName(),
+                receipt.getReceiptNumber(),
                 receipt.getAmount().amount(),
                 receipt.getIssueDate(),
                 receipt.getImagePath()

@@ -6,10 +6,7 @@ import b4u.pocketpartners.backend.operations.domain.exceptions.ExpenseNotFoundEx
 import b4u.pocketpartners.backend.operations.domain.exceptions.ReceiptNotFoundException;
 import b4u.pocketpartners.backend.operations.domain.model.aggregates.Expense;
 import b4u.pocketpartners.backend.operations.domain.model.aggregates.Payment;
-import b4u.pocketpartners.backend.operations.domain.model.commands.CreateOcrReceiptCommand;
-import b4u.pocketpartners.backend.operations.domain.model.commands.CreateReceiptForExpenseCommand;
-import b4u.pocketpartners.backend.operations.domain.model.commands.CreateReceiptForPaymentCommand;
-import b4u.pocketpartners.backend.operations.domain.model.commands.DeleteReceiptCommand;
+import b4u.pocketpartners.backend.operations.domain.model.commands.*;
 import b4u.pocketpartners.backend.operations.domain.model.entities.ExpenseReceipt;
 import b4u.pocketpartners.backend.operations.domain.model.entities.OcrReceipt;
 import b4u.pocketpartners.backend.operations.domain.model.entities.PaymentReceipt;
@@ -22,7 +19,6 @@ import b4u.pocketpartners.backend.operations.infrastructure.persistence.jpa.repo
 import b4u.pocketpartners.backend.operations.infrastructure.persistence.jpa.repositories.ReceiptRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -107,7 +103,7 @@ public class ReceiptCommandServiceImpl implements ReceiptCommandService {
     }
 
     @Override
-    public OcrReceipt handle(CreateOcrReceiptCommand command) {
+    public OcrReceipt handle(CreateOcrReceiptFromReceiptCommand command) {
         var receipt = receiptRepository.findById(command.originalReceiptId())
                 .orElseThrow(()-> new ReceiptNotFoundException(command.originalReceiptId()));
 
@@ -123,6 +119,11 @@ public class ReceiptCommandServiceImpl implements ReceiptCommandService {
         ocrReceipt.assignToOriginalReceipt(receipt);
         receiptRepository.save(ocrReceipt);
         return ocrReceipt;
+    }
+
+    @Override
+    public OcrReceipt handle(CreateOcrReceiptFromImageCommand command) {
+        return receiptOcrPort.processReceiptImage(command.imageUrl());
     }
 
     @Override
