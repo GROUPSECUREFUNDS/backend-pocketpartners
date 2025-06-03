@@ -9,7 +9,6 @@ FROM openjdk:22-jdk
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-COPY src/main/resources/tessdata /app/tessdata
-
+# Exponer el puerto 8080 para la aplicación
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

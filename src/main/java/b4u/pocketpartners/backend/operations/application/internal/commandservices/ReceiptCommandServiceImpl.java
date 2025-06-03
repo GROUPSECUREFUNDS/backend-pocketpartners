@@ -6,20 +6,19 @@ import b4u.pocketpartners.backend.operations.domain.exceptions.ExpenseNotFoundEx
 import b4u.pocketpartners.backend.operations.domain.exceptions.ReceiptNotFoundException;
 import b4u.pocketpartners.backend.operations.domain.model.aggregates.Expense;
 import b4u.pocketpartners.backend.operations.domain.model.aggregates.Payment;
-import b4u.pocketpartners.backend.operations.domain.model.commands.CreateReceiptForExpenseCommand;
-import b4u.pocketpartners.backend.operations.domain.model.commands.CreateReceiptForPaymentCommand;
-import b4u.pocketpartners.backend.operations.domain.model.commands.DeleteReceiptCommand;
+import b4u.pocketpartners.backend.operations.domain.model.commands.*;
 import b4u.pocketpartners.backend.operations.domain.model.entities.ExpenseReceipt;
+import b4u.pocketpartners.backend.operations.domain.model.entities.OcrReceipt;
 import b4u.pocketpartners.backend.operations.domain.model.entities.PaymentReceipt;
 import b4u.pocketpartners.backend.operations.domain.model.entities.Receipt;
 import b4u.pocketpartners.backend.operations.domain.model.valueobjects.Amount;
+import b4u.pocketpartners.backend.operations.domain.ports.out.ReceiptOcrPort;
 import b4u.pocketpartners.backend.operations.domain.services.ReceiptCommandService;
 import b4u.pocketpartners.backend.operations.infrastructure.persistence.jpa.repositories.ExpenseRepository;
 import b4u.pocketpartners.backend.operations.infrastructure.persistence.jpa.repositories.PaymentRepository;
 import b4u.pocketpartners.backend.operations.infrastructure.persistence.jpa.repositories.ReceiptRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +28,7 @@ public class ReceiptCommandServiceImpl implements ReceiptCommandService {
     private ReceiptRepository receiptRepository;
     private ExpenseRepository expenseRepository;
     private PaymentRepository paymentRepository;
+    private ReceiptOcrPort receiptOcrPort;
 
     @Override
     public Receipt handle(CreateReceiptForPaymentCommand command) {
@@ -100,6 +100,30 @@ public class ReceiptCommandServiceImpl implements ReceiptCommandService {
 
         receiptRepository.save(receipt);
         return receipt;
+    }
+
+    @Override
+    public OcrReceipt handle(CreateOcrReceiptFromReceiptCommand command) {
+        var receipt = receiptRepository.findById(command.originalReceiptId())
+                .orElseThrow(()-> new ReceiptNotFoundException(command.originalReceiptId()));
+
+        if(receipt.getImagePath()==null) {
+            throw new IllegalArgumentException("Receipt image path is not set for OCR processing.");
+        }
+
+        if(receipt.getOcrReceipt() != null) {
+            return receipt.getOcrReceipt(); // Return existing OCR receipt if it already exists
+        }
+
+        OcrReceipt ocrReceipt = receiptOcrPort.processReceiptImage(receipt.getImagePath());
+        ocrReceipt.assignToOriginalReceipt(receipt);
+        receiptRepository.save(ocrReceipt);
+        return ocrReceipt;
+    }
+
+    @Override
+    public OcrReceipt handle(CreateOcrReceiptFromImageCommand command) {
+        return receiptOcrPort.processReceiptImage(command.imageUrl());
     }
 
     @Override
