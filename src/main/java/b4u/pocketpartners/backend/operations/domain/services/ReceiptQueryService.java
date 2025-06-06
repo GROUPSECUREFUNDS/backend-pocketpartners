@@ -14,4 +14,5 @@ public interface ReceiptQueryService {
     List<PaymentReceipt> handle(GetAllReceiptsByPaymentIdQuery query);
     Optional<Receipt> handle(GetReceiptByIdQuery query);
     List<ExpenseReceipt> handle(GetAllReceiptsByExpenseIdQuery query);
+
 }
