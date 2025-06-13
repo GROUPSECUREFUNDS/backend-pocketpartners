@@ -95,4 +95,13 @@ public class PaymentController {
         var paymentResources = payments.stream().map(PaymentResourceFromEntityAssembler::toResourceFromEntity).toList();
         return ResponseEntity.ok(paymentResources);
     }
+
+    @GetMapping("/incoming/{userInformationId}")
+    public ResponseEntity<List<PaymentResource>> getIncomingPaymentsByUserInformationId(@PathVariable Long userInformationId) {
+        var getIncomingPaymentsByUserInformationIdQuery = new GetIncomingPaymentsByUserInformationIdQuery(userInformationId);
+        var payments = paymentQueryService.handle(getIncomingPaymentsByUserInformationIdQuery);
+        if (payments.isEmpty()) return ResponseEntity.notFound().build();
+        var paymentResources = payments.stream().map(PaymentResourceFromEntityAssembler::toResourceFromEntity).toList();
+        return ResponseEntity.ok(paymentResources);
+    }
 }

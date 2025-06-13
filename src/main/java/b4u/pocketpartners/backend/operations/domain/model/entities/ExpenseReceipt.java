@@ -22,6 +22,10 @@ public class ExpenseReceipt extends Receipt {
         super(name, amount, issueDate, imagePath);
         this.expense = expense;
     }
+    public ExpenseReceipt(String name, String receiptNumber, Amount amount, LocalDate issueDate, String imagePath, Expense expense) {
+        super(name, amount, issueDate, imagePath, receiptNumber);
+        this.expense = expense;
+    }
 
     public void assignToExpense(Expense expense) {
         this.expense = expense;

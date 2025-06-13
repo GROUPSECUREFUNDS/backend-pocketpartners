@@ -27,6 +27,10 @@ public class PaymentReceipt extends Receipt{
         super(name, amount, issueDate, imagePath);
         this.payment = payment;
     }
+    public PaymentReceipt(String name,String receiptNumber, Amount amount, LocalDate issueDate, String imagePath, Payment payment) {
+        super(name, amount, issueDate, imagePath,receiptNumber);
+        this.payment = payment;
+    }
     public void assignToPayment(Payment payment){
         this.payment = payment;
     }
