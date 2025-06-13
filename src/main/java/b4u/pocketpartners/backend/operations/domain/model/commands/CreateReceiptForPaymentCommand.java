@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 public record CreateReceiptForPaymentCommand(
         String name,
+        String receiptNumber,
         BigDecimal amount,
         LocalDate issueDate,
         String imagePath,

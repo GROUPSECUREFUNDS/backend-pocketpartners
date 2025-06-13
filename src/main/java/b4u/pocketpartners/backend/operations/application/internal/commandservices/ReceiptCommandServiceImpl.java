@@ -37,6 +37,7 @@ public class ReceiptCommandServiceImpl implements ReceiptCommandService {
 
         Receipt receipt = new PaymentReceipt(
                 command.name(),
+                command.receiptNumber(),
                 new Amount(command.amount()),
                 command.issueDate(),
                 command.imagePath(),
@@ -73,6 +74,7 @@ public class ReceiptCommandServiceImpl implements ReceiptCommandService {
 
         ExpenseReceipt receipt = new ExpenseReceipt(
                 command.name(),
+                command.receiptNumber(),
                 new Amount(command.amount()),
                 command.issueDate(),
                 command.imagePath(),

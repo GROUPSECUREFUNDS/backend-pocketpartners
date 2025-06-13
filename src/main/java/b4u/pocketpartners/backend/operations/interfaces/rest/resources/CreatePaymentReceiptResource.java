@@ -10,6 +10,7 @@ public record CreatePaymentReceiptResource(
         Long paymentId,
         @NotNull
         String name,
+        String receiptNumber,
         @NotNull
         BigDecimal amount,
         @NotNull

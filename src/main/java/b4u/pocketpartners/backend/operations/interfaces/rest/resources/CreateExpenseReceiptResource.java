@@ -10,6 +10,7 @@ public record CreateExpenseReceiptResource(
         Long expenseId,
         @NotNull
         String name,
+        String receiptNumber,
         @NotNull
         BigDecimal amount,
         @NotNull

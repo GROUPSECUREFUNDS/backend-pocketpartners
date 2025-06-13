@@ -9,6 +9,7 @@ public class CreateReceiptCommandFromResourceAssembler {
     public static CreateReceiptForPaymentCommand toCommandFromResource(CreatePaymentReceiptResource receipt) {
         return new CreateReceiptForPaymentCommand(
                 receipt.name(),
+                receipt.receiptNumber(),
                 receipt.amount(),
                 receipt.issueDate(),
                 receipt.imagePath(),
@@ -19,6 +20,7 @@ public class CreateReceiptCommandFromResourceAssembler {
     public static CreateReceiptForExpenseCommand toCommandFromResource(CreateExpenseReceiptResource receipt) {
         return new CreateReceiptForExpenseCommand(
                 receipt.name(),
+                receipt.receiptNumber(),
                 receipt.amount(),
                 receipt.issueDate(),
                 receipt.imagePath(),
